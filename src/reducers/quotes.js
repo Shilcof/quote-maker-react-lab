@@ -1,3 +1,19 @@
 export default (state = [], action) => {
-  return state;
+  let index
+  switch (action.type) {
+    case 'ADD_QUOTE':
+      return [...state, action.quote]
+    case 'REMOVE_QUOTE':
+      index = state.findIndex(q=>q.id===action.quoteId)
+      return [...state.slice(0, index), ...state.slice(index+1)]
+    case 'UPVOTE_QUOTE':
+      index = state.findIndex(q=>q.id===action.quoteId)
+      return [...state.slice(0, index), {...state[index], votes: state[index].votes + 1},...state.slice(index+1)]
+    case 'DOWNVOTE_QUOTE':
+      index = state.findIndex(q=>q.id===action.quoteId)
+      if (state[index].votes < 1) return state
+      return [...state.slice(0, index), {...state[index], votes: state[index].votes - 1},...state.slice(index+1)]
+    default:
+      return state;
+  }
 }
